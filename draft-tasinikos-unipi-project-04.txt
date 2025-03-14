@@ -1,0 +1,280 @@
+
+
+
+
+Education                                                 D.T. Tasinikos
+Internet-Draft                                     University of Piraeus
+Intended status: Informational                               7 June 2024
+Expires: 9 December 2024
+
+
+                       Semester project for 2024
+                    draft-tasinikos-unipi-project-04
+
+Abstract
+
+   The purpose of this document is to explain to you the creation of a
+   TCP protocol between a server and one or more clients.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 9 December 2024.
+
+Copyright Notice
+
+   Copyright (c) 2024 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
+
+
+
+
+
+
+
+Tasinikos                Expires 9 December 2024                [Page 1]
+
+Internet-Draft          Semester project for 2024              June 2024
+
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
+   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   2
+   3.  Protocol Overview . . . . . . . . . . . . . . . . . . . . . .   2
+   4.  Protocol Header Format  . . . . . . . . . . . . . . . . . . .   3
+     4.1.  First header  . . . . . . . . . . . . . . . . . . . . . .   3
+     4.2.  Second header . . . . . . . . . . . . . . . . . . . . . .   4
+   5.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   5
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   5
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
+   8.  Informative References  . . . . . . . . . . . . . . . . . . .   5
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   5
+
+1.  Introduction
+
+   The purpose of this document is simple.  To explain to you the
+   creation of a TCP protocol that creates a socket communication with
+   headers between a server and multiple clients that want to send to
+   the server a request at the same time.
+
+   This document follows the keyword use as specified in RFC2119
+   [RFC2119].
+
+2.  Terminology
+
+   This document uses the following terms:
+
+      Protocol - A pre-approved communication language between two end
+      systems.In our case the protocol will be TCP.
+
+      Server - The part of the communication protocol that receives the
+      request.  In this project the server receives the request and
+      sends back the message that suits to every possible outcome.
+
+      Client - The part of the communication protocol that starts the
+      request.  In this project the client gives the numbers that want
+      to sum,average or sum of two different array lists .
+
+      byte - An 8-bit octet
+
+3.  Protocol Overview
+
+   In the lines that follows you can see a high-level overview of the
+   message exchange between the server and the client:
+
+
+
+
+
+
+Tasinikos                Expires 9 December 2024                [Page 2]
+
+Internet-Draft          Semester project for 2024              June 2024
+
+
+              Server                                           Client
+                 |                                               |
+                 |   Client gives the message with the           |
+                 |   numbers and the mathematical operation      |
+                 | <---------------------------------------------|
+                 |                                               |
+                 |  A message response that the server sent      |
+                 |  with the value of error or excellent work    |
+                 |  and with th result of mathematical operation |
+                 | --------------------------------------------> |
+
+                         Figure 1: Message Exchange
+
+4.  Protocol Header Format
+
+4.1.  First header
+
+   This is the first message sent by the Client to initiate the
+   communication process...
+
+   To this message the client will select one of the three available
+   mathematical operations(sum,average or sum of two different array
+   lists).
+
+   The client will also select how much will be the numbers that will
+   take part at the mathimatical operation.
+
+   After all the things that the client will select above he/she wait
+   for the server response message and the result.
+
+             0                   1                   2                   3
+             0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |        Message Type           |              Length           |
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |               a               |                b              |
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |                    Numbers to be sent...                      |
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+                      Figure 2: A Header Format
+
+   *  Message Type - 16 bits unsigned short: The message type.  For this
+      message, the message type MUST be 0.
+
+   *  Length - 16 bits unsigned integer: The Length of the message that
+      will be sent.
+
+
+
+
+Tasinikos                Expires 9 December 2024                [Page 3]
+
+Internet-Draft          Semester project for 2024              June 2024
+
+
+   *  a - 16 bits unsigned short: The number(1,2 or 3) of one of three
+      available mathematical operations.  The value for this message
+      MUST be 4.
+
+   *  b - 16 bits unsigned short: The selected numbers that will take
+      part at the mathimatical operation.The value for this message MUST
+      be 4.
+
+   *  Numbers to be sent - (number of bits that will be calculated)
+      short.  The value for this message MUST be 8 at every line.
+
+4.2.  Second header
+
+   This is the second message sent by the Server to give to the client a
+   response message and a result of the mathematical operations.
+
+   To this message the server will send the result to the client if
+   there is no problems.
+
+   The server will also send a sentence with a message of error if the
+   credentials will not be right or message that all have been
+   succesfully done.
+
+   After all the server will also calculate the padding of the last raw
+   so the message will be well-formed.
+
+             0                   1                   2                   3
+             0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |        Message Type           |              Length           |
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |                          Apotelesma                           |
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            |           Sentence            |             Padding           |
+            +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+                      Figure 3: A Header Format
+
+   *  Message Type - 16 bits unsigned short: The message type.  For this
+      message, the message type MUST be 0.
+
+   *  Length - 16 bits unsigned integer: The Length of the message that
+      will be sent.
+
+   *  Apotelesma - 32 bits integer: The result of the mathematical
+      operation.  The value for this message MUST be 8.
+
+
+
+
+
+Tasinikos                Expires 9 December 2024                [Page 4]
+
+Internet-Draft          Semester project for 2024              June 2024
+
+
+   *  Sentence - (number of bits that will be calculated) char: The
+      sentence of error or well done that will be sent back.
+
+   *  Padding - (number of bits that will be calculated) x.  The value
+      for this message will be affected from the sentence length.
+
+5.  Acknowledgements
+
+   Finally i want to thank you for the attendance of the Project.
+
+   Also i want to thank you about the time that you spent to see my job
+   on this Project.
+
+6.  IANA Considerations
+
+   This memo makes no requests to IANA.
+
+   You could though! ;)
+
+7.  Security Considerations
+
+   There is no security in this specification.  This is a prototype and
+   all messages should be sent in cleartext over the wire.
+
+   This is a VERY unsecure protocol.  Please do not implement.
+
+8.  Informative References
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
+
+Author's Address
+
+   Dimitrios Tasinikos
+   University of Piraeus
+   Department of Digital Systems
+   18534 Piraeus
+   Greece
+   Email: tastas757@gmail.com
+
+
+
+
+
+
+
+
+
+
+Tasinikos                Expires 9 December 2024                [Page 5]
